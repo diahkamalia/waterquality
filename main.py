@@ -102,7 +102,15 @@ with dataset:
     uploaded_files = st.file_uploader("Upload file CSV", accept_multiple_files=True)
     for uploaded_file in uploaded_files:
         df = pd.read_csv(uploaded_file)
-        df = df.dropna()
+        df["ph"].fillna(0, inplace=True)
+        df["Hardness"].fillna(0, inplace=True)
+        df["Solids"].fillna(0, inplace=True)
+        df["Chloramines"].fillna(0, inplace=True)
+        df["Sulfate"].fillna(0, inplace=True)
+        df["Conductivity"].fillna(0, inplace=True)
+        df["Organic_carbon"].fillna(0, inplace=True)
+        df["Trihalomethanes"].fillna(0, inplace=True)
+        df["Turbidity"].fillna(0, inplace=True)
         st.write("Nama File Anda = ", uploaded_file.name)
         st.dataframe(df)
         
