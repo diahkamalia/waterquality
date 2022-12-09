@@ -121,12 +121,12 @@ with dataset:
         
 with preprocessing : 
     st.write("""# Preprocessing""")
-    st.write(""""
+    st.write("""
     > Preprocessing data adalah proses menyiapkan data mentah dan membuatnya cocok untuk model pembelajaran mesin. Ini adalah langkah pertama dan penting saat membuat model pembelajaran mesin. Saat membuat proyek pembelajaran mesin, kami tidak selalu menemukan data yang bersih dan terformat.
     """)
     st.write("### Formula")
     st.latex(r'''
-    \LARGE{X} = \frac{X_i - X_min}{X_max - X_min}
+    X = \frac{X_i - X_{min}}{X_{max} - X_{min}}
     ''')
     st.write("Data yang belum dinormalisasi")
     st.dataframe(df)
@@ -247,7 +247,7 @@ with modelling :
         > Decision tree merupakan alat pendukung keputusan dengan struktur seperti pohon yang memodelkan kemungkinan hasil, biaya sumber daya, utilitas, dan kemungkinan konsekuensi. Konsepnya adalah dengan cara menyajikan algoritma dengan pernyataan bersyarat yang meliputi cabang untuk mewakili langkah-langkah pengambilan keputusan yang dapat mengarah pada hasil yang menguntungkan.
         """)
         st.write("### Define Decision Tree Roots")
-        st.write(""""
+        st.write("""
         > Akar akan diambil dari atribut yang terpilih, dengan cara menghitung nilai gain dari masing – masing atribut. Nilai gain yang paling tinggi akan menjadi akar pertama. Sebelum menghitung niali gain dari atribut, harus menghitung nilai entropy terlebih dahulu
         """)
         st.write("### Formula Entropy")
