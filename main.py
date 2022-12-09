@@ -24,9 +24,7 @@ import time
 import os,sys
 from scipy import stats
 
-
-
-st.set_page_config(page_title="Diah Kamalia")
+st.set_page_config(page_title="Diah Kamalia", page_icon='logo.png')
 
 st.title("Aplikasi Data Mining - Water Quality")
 st.write("Diah Kamalia - 200411100061")
