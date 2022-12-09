@@ -279,7 +279,7 @@ with modelling :
         """)
         st.write("### Formula")
         st.latex(r'''
-        P_{X,Y} (P_{\theta}(h(X, \theta) = \LARGEY - \max\limits_{j \not = Y} P_{\theta}(h(X, \theta) = j) < 0)
+        P_{X,Y} (P_{\theta}(h(X, \theta) = Y - \max\limits_{j \not = Y} P_{\theta}(h(X, \theta) = j) < 0)
         ''')
         # Inisialisasi Random Forest
         from sklearn.ensemble import RandomForestClassifier
