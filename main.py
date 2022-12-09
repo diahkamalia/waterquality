@@ -247,9 +247,9 @@ with modelling :
         st.latex(r'''
         Entropy\left(\LARGE{D_1}\right) = - \displaystyle\sum_{i=1}^m p_i log_2 p_i
         ''')
-        st.write("### Formula Gain")
+        st.write("### Formula Gain (D1)")
         st.latex(r'''
-        Gain(E_new) = E_initial - E_new
+        Gain(E_new) = E_i_n_i_t_i_a_l - E_n_e_w
         ''')
         # Inisialisasi Decision Tree
         from sklearn.tree import DecisionTreeClassifier
