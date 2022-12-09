@@ -222,7 +222,7 @@ with modelling :
         """)
         st.write("### Formula")
         st.latex(r'''
-        P(C_k | x) = 
+        P(C_k \<space>| \<space>x) = \frac{P(C_k) P(x|C_k}{P(x}
         ''')
         # Inisialisasi Gaussian
         from sklearn.naive_bayes import GaussianNB
