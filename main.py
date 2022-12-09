@@ -164,7 +164,7 @@ with preprocessing :
     X = hasil_minmax
     y=pd.DataFrame(df, columns=["Potability"])
     # membagi data menjadi set train dan test (70:30)
-    X_train,X_test,y_train,y_test = train_test_split(X,y,test_size=0.3,random_state=1)
+    X_train,X_test,y_train,y_test = train_test_split(X,y,test_size=0.2,random_state=1,stratify=y)
 
     st.write("Menampilkan X")
     st.write(X)
@@ -222,8 +222,7 @@ with modelling :
         """)
         st.write("### Formula")
         st.latex(r'''
-        d(p,q) = d(p,q) = \sqrt{(q_1 - p_1)^2 + (q_2 - p_2)^2 + . . . + (q_n - p_n)^2}
-                        = \sqrt{\displaystyle\sum_{i=1}^n (q_i - p_i)^2}
+        P(C_k | x) = 
         ''')
         # Inisialisasi Gaussian
         from sklearn.naive_bayes import GaussianNB
