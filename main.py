@@ -7,19 +7,23 @@ from sklearn.model_selection import train_test_split
 from sklearn.neighbors import KNeighborsClassifier
 from numpy import array
 from sklearn import tree
-from sklearn.naive_bayes import GaussianNB
-from sklearn.preprocessing import StandardScaler
-from sklearn.metrics import confusion_matrix, accuracy_score, recall_score, precision_score, f1_score
-from sklearn.tree import DecisionTreeClassifier
-from collections import OrderedDict
+from sklearn.neural_network import MLPClassifier
 from sklearn.neighbors import KNeighborsClassifier
-from sklearn.ensemble import BaggingClassifier
-from sklearn.datasets import make_classification
+from sklearn.cluster import KMeans
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.metrics import accuracy_score
+from sklearn.model_selection import GridSearchCV
 from sklearn.svm import SVC
 import altair as alt
 from sklearn.utils.validation import joblib
 from sklearn.preprocessing import StandardScaler
-from PIL import Image
+import joblib
+from io import StringIO, BytesIO
+import urllib.request
+import time
+import os,sys
+from scipy import stats
+
 
 
 st.set_page_config(page_title="Diah Kamalia")
@@ -130,51 +134,241 @@ with preprocessing :
 
     st.write(" ## Normalisasi ")
     st.write(""" > ph, Hardness, Solids, Chloramines, Sulfate, Conductivity, Organic Carbon, Trihalomethanes, Turbidity """)
-    label_lama = ['ph', 'Hardness', 'Solids', 'Chloramines','Sulfate','Conductivity','Organic_carbon','Trihalomethanes','Turbidity']
-    label_baru = ['norm_ph', 'norm_Hardness', 'norm_Solids', 'norm_Chloramines','norm_Sulfate','norm_Conductivity','norm_Organic_carbon','norm_Trihalomethanes','norm_Turbidity']
-    normalisasi_kolom = df[label_lama]
-
-    st.dataframe(normalisasi_kolom)
-
+    st.write("#### Data setelah Normalisasi ")
+    label=df["Potability"]
+    data_for_minmax_scaler=pd.DataFrame(df, columns = ['ph', 'Hardness', 'Solids', 'Chloramines','Sulfate','Conductivity','Organic_carbon','Trihalomethanes','Turbidity'])
+    data_for_minmax_scaler.to_numpy()
     scaler = MinMaxScaler()
-    scaler.fit(normalisasi_kolom)
-    kolom_ternormalisasi = scaler.transform(normalisasi_kolom)
-    df_kolom_ternormalisasi = pd.DataFrame(kolom_ternormalisasi, columns = label_baru)
+    hasil_minmax=scaler.fit_transform(data_for_minmax_scaler)
+    hasil_minmax = pd.DataFrame(hasil_minmax,columns = ['ph', 'Hardness', 'Solids', 'Chloramines','Sulfate','Conductivity','Organic_carbon','Trihalomethanes','Turbidity'])
 
-    st.write("### Data After Normalized")
-    st.dataframe(df_kolom_ternormalisasi)
 
-    X = X.drop(columns = label_lama)
+    st.dataframe(hasil_minmax)
 
-    X = X.join(df_kolom_ternormalisasi)
-
-    X = X.join(label)
-
-    st.write("dataframe X baru")
+    X = hasil_minmax
+    X=X.join(label) 
+    st.write("## Dataframe Baru")
     st.dataframe(X)
-
     st.write("## Hitung Data")
     st.write("- Drop Potability column from dataframe")
     st.write("- Split Data Training and Data Test")
     st.write(""" ### Spliting Data
-            > Data Training - X_train 
-            > Data Test - X_test 
-            > Data Training (Class) - y_train
-            > Data Test (Class) - y_test
+            - Data Training - X_train 
+            - Data Test - X_test 
+            - Data Training (Class) - y_train
+            - Data Test (Class) - y_test
             """)
 
 
     # memisahkan data Potability
-    X = X.iloc[:]
-    y = df.loc[:, "Potability"]
-    y = df["Potability"].values
-
+    X = hasil_minmax
+    y=pd.DataFrame(df, columns=["Potability"])
     # membagi data menjadi set train dan test (70:30)
-    X_train,X_test,y_train,y_test = train_test_split(X,y,test_size=0.3,random_state=1,stratify=y)
+    X_train,X_test,y_train,y_test = train_test_split(X,y,test_size=0.3,random_state=1)
 
     st.write("Menampilkan X")
     st.write(X)
     
     st.write("Menampilkan Y")
     st.write(y)
-    
+
+with modelling : 
+    st.write("""# Modelling""")
+    knn,gaussian,decision,random = st.tabs(["K-Nearest Neighbor", "Gaussian Naive Bayes", "Decision Tree", "Random Forest"])
+    with knn:
+        st.write("## K-Nearest Neighbor")
+        st.write("""
+        > Algortima K-Nearest Neighbor (KNN) adalah merupakan sebuah metode untuk melakukan klasifikasi terhadap obyek baru berdasarkan (K) tetangga terdekatnya. Metode pencarian jarak yang digunakan adalah Euclidean Distance yaitu perhitungan jarak terdekat.
+        """)
+        st.write("### Formula")
+        st.latex(r'''
+        d(p,q) = d(p,q) = \sqrt{(q_1 - p_1)^2 + (q_2 - p_2)^2 + . . . + (q_n - p_n)^2}
+                        = \sqrt{\displaystyle\sum_{i=1}^n (q_i - p_i)^2}
+        ''')
+        st.write("""
+        > KNN termasuk algoritma supervised learning, dimana hasil dari query instance yang baru, diklasifikasikan berdasarkan mayoritas dari kategori pada KNN. Kelas yang paling banyak muncul yang akan menjadi kelas hasil klasifikasi
+        """)
+        st.write("### Urutan Algoritma K-Nearest Neighbor")
+        st.write("""
+        1. Menentukan parameter K (jumlah tetangga paling dekat)
+
+        2. Menghitung kuadrat jarak euclidian (euclidean distance) masing-masing obyek terhadap data sampel yang diberikan
+
+        3. Mengurutkan objek-objek tersebut ke dalam kelompok yang mempunyai jarak euclidean terkecil
+
+        4. Mengumpulkan kategori Y (klasifikasi nearest neighbor)
+
+        5. Dengan menggunakan kategori mayoritas,maka dapat diprediksikan nilai query instance yang telah dihitung
+        """)
+        # Inisialisasi K-NN
+        my_param_grid = {'n_neighbors':[2,3,5,7], 'weights': ['distance', 'uniform']}
+        GridSearchCV(estimator=KNeighborsClassifier(), param_grid=my_param_grid, refit=True, verbose=3, cv=3)
+        knn = GridSearchCV(KNeighborsClassifier(), param_grid=my_param_grid, refit=True, verbose=3, cv=3)
+        knn.fit(X_train, y_train)
+
+        pred_test = knn.predict(X_test)
+
+        modknn = f'Water Potability accuracy of K-Nearest Neighbour model is : {accuracy_score(y_test, pred_test) * 100 :.2f} %'
+
+        filenameModelKnn = 'KNN.pkl'
+        joblib.dump(knn, filenameModelKnn)
+        st.header("Accuracy Result")
+        st.write(modknn)
+
+    with gaussian:
+        st.write("## Gaussian Naive Bayes")
+        st.write("""
+        > Naive Bayes adalah algoritma machine learning untuk masalah klasifikasi. Ini didasarkan pada teorema probabilitas Bayes. Hal ini digunakan untuk klasifikasi teks yang melibatkan set data pelatihan dimensi tinggi. Beberapa contohnya adalah penyaringan spam, analisis sentimental, dan klasifikasi artikel berita.
+        """)
+        st.write("### Formula")
+        st.latex(r'''
+        d(p,q) = d(p,q) = \sqrt{(q_1 - p_1)^2 + (q_2 - p_2)^2 + . . . + (q_n - p_n)^2}
+                        = \sqrt{\displaystyle\sum_{i=1}^n (q_i - p_i)^2}
+        ''')
+        # Inisialisasi Gaussian
+        from sklearn.naive_bayes import GaussianNB
+        gnb = GaussianNB()
+        gnb.fit(X_train, y_train)
+        y_pred = gnb.predict(X_test)
+
+        modgnb = f'Water Potability accuracy of Gaussian Naive Bayes model is : {accuracy_score(y_test, y_pred) * 100 :.2f} %'
+
+        filenameModelGau = 'Gaussian.pkl'
+        joblib.dump(gnb, filenameModelGau)
+        st.header("Accuracy Result")
+        st.write(modgnb)
+
+    with decision:
+        st.write("## Decision Tree")
+        st.write("""
+        > Decision tree merupakan alat pendukung keputusan dengan struktur seperti pohon yang memodelkan kemungkinan hasil, biaya sumber daya, utilitas, dan kemungkinan konsekuensi. Konsepnya adalah dengan cara menyajikan algoritma dengan pernyataan bersyarat yang meliputi cabang untuk mewakili langkah-langkah pengambilan keputusan yang dapat mengarah pada hasil yang menguntungkan.
+        """)
+        st.write("### Formula")
+        st.latex(r'''
+        d(p,q) = d(p,q) = \sqrt{(q_1 - p_1)^2 + (q_2 - p_2)^2 + . . . + (q_n - p_n)^2}
+                        = \sqrt{\displaystyle\sum_{i=1}^n (q_1 - p_1)^2}
+        ''')
+        # Inisialisasi Decision Tree
+        from sklearn.tree import DecisionTreeClassifier
+        d3 = DecisionTreeClassifier()
+        d3.fit(X_train, y_train)
+
+        y_pred = d3.predict(X_test)
+
+        moddt = f'Water Potability accuracy of Decision Tree model is : {accuracy_score(y_test, y_pred) * 100 :.2f} %'
+
+        filenameModelDT = 'DecisionTree.pkl'
+        joblib.dump(d3, filenameModelDT)
+        st.header("Accuracy Result")
+        st.write(moddt)
+
+    with random:
+        st.write("## Random Forest")
+        st.write(""" 
+        > XXX
+        """)
+        st.write("### Formula")
+        st.latex(r'''
+        d(p,q) = d(p,q) = \sqrt{(q_1 - p_1)^2 + (q_2 - p_2)^2 + . . . + (q_n - p_n)^2}
+                        = \sqrt{\displaystyle\sum_{i=1}^n (q_1 - p_1)^2}
+        ''')
+        # Inisialisasi Random Forest
+        from sklearn.ensemble import RandomForestClassifier
+        clf = RandomForestClassifier(n_estimators=14, max_depth=2, random_state=0)
+        clf = clf.fit(X_train, y_train)
+
+        y_test_pred = clf.predict(X_test)
+        modrf = f'Water Potability accuracy of Random Forest model is : {accuracy_score(y_test, y_test_pred) * 100 :.2f} %'
+
+        filenameModelrmf = 'RandomForest.pkl'
+        joblib.dump(d3, filenameModelrmf)
+        st.header("Accuracy Result")
+        st.write(modrf)
+
+with implementation:
+    st.write("# Implementation")
+    st.write("### Input Data :")
+    ph = st.number_input("pH")
+    Hardness = st.number_input("Hardness")
+    Solids = st.number_input("Solids")
+    Chloramines = st.number_input("Chloramines")
+    Sulfate = st.number_input("Sulfate")
+    Conductivity = st.number_input("Conductivity")
+    Organic_carbon = st.number_input("Organic Carbon")
+    Trihalomethanes = st.number_input("Trihalomethanes")
+    Turbidity = st.number_input("Turbidity")
+    def submit():
+        a = np.array([[ph, Hardness, Solids, Chloramines, Sulfate, Conductivity, Organic_carbon, Trihalomethanes, Turbidity]])
+        test_data = np.array(a).reshape(1, -1)
+        test_data = pd.DataFrame(test_data)
+        scaler = MinMaxScaler()
+        import joblib
+        filename = "norm.sav"
+        joblib.dump(scaler, filename) 
+
+        scaler = joblib.load(filename)
+        test_d = scaler.fit_transform(test_data)
+        # pd.DataFrame(test_d)
+
+        # load knn
+        knn = joblib.load(filenameModelKnn)
+        pred = knn.predict(test_d)
+
+        # load gausian
+        gnb = joblib.load(filenameModelGau)
+        pred = gnb.predict(test_d)
+
+        # load gdecision tree
+        d3 = joblib.load(filenameModelDT)
+        pred = d3.predict(test_d)
+
+        # load kmean
+        km = joblib.load(filenameModelrmf)
+        pred = km.predict(test_d)
+
+
+        # button
+        st.header("Data Input")
+        st.write("Berikut ini tabel hasil input data testing yang akan diklasifikasi:")
+        labelmodel=['ph', 'Hardness', 'Solids', 'Chloramines','Sulfate','Conductivity','Organic Carbon','Trihalomethanes','Turbidity']
+        model = pd.DataFrame(a, columns = labelmodel)
+        st.dataframe(model)
+
+        st.header("Classification Result")
+        near, naive, tree, forest = st.tabs(["K-Nearest Neighbour", "Naive Bayes Gaussian", "Decision Tree", "Random Forest"])
+        
+        with near:
+            st.subheader("Model K-Nearest Neighbour")
+            pred = knn.predict(test_d)
+            if pred[0]== 0 :
+                st.write("I'm Sorry, the water you tested is Not Potable")
+            elif pred[0]== 1 :
+                st.write("Good news, the water you tested is Potable")
+
+        with naive:
+            st.subheader("Model Naive Bayes Gausian")
+            pred = gnb.predict(test_d)
+            if pred[0]== 0 :
+                st.write("I'm Sorry, the water you tested is Not Potable")
+            elif pred[0]== 1 :
+                st.write("Good news, the water you tested is Potable")
+                
+        with tree:
+            st.subheader("Model Decision Tree")
+            pred = d3.predict(test_d)
+            if pred[0]== 0 :
+                st.write("I'm Sorry, the water you tested is Not Potable")
+            elif pred[0]== 1 :
+                st.write("Good news, the water you tested is Potable")
+
+        with forest:
+            st.subheader("Model Random Forest")
+            pred = km.predict(test_d)
+            if pred[0]== 0 :
+                st.write("I'm Sorry, the water you tested is Not Potable")
+            elif pred[0]== 1 :
+                st.write("Good news, the water you tested is Potable")
+
+    submitted = st.button("Submit")
+    if submitted:
+        submit()
