@@ -121,6 +121,13 @@ with dataset:
         
 with preprocessing : 
     st.write("""# Preprocessing""")
+    st.write(""""
+    > Preprocessing data adalah proses menyiapkan data mentah dan membuatnya cocok untuk model pembelajaran mesin. Ini adalah langkah pertama dan penting saat membuat model pembelajaran mesin. Saat membuat proyek pembelajaran mesin, kami tidak selalu menemukan data yang bersih dan terformat.
+    """)
+    st.write("### Formula")
+    st.latex(r'''
+    \LARGE{X} = \frac{X_i - X_min}{X_max - X_min}
+    ''')
     st.write("Data yang belum dinormalisasi")
     st.dataframe(df)
 
@@ -268,11 +275,11 @@ with modelling :
     with random:
         st.write("## Random Forest")
         st.write(""" 
-        > XXX
+        > Random forest  adalah kombinasi dari  masing – masing tree yang baik kemudian dikombinasikan  ke dalam satu model. Random Forest bergantung pada sebuah nilai vector random dengan distribusi yang sama pada semua pohon yang masing masing decision tree memiliki kedalaman yang maksimal. Random forest adalah classifier yang terdiri dari classifier yang berbentuk pohon di mana random vector diditribusikan secara independen dan masing masing tree pada sebuah unit kan memilih class yang paling popular pada input x.
         """)
         st.write("### Formula")
         st.latex(r'''
-        Entropy\left(\LARGE{D_1}\right) = - \displaystyle\sum_{i=1}^m p_i log_2 p_i
+        P_{X,Y} (P_{\theta}(h(\LARGE{X, \theta}) = \LARGE{Y} - \max\limits_{j \not = Y} P_{\theta}(h(X, \theta) = j) < 0)
         ''')
         # Inisialisasi Random Forest
         from sklearn.ensemble import RandomForestClassifier
