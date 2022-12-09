@@ -185,9 +185,6 @@ with modelling :
         d(p,q) = d(p,q) = \sqrt{(q_1 - p_1)^2 + (q_2 - p_2)^2 + . . . + (q_n - p_n)^2}
                         = \sqrt{\displaystyle\sum_{i=1}^n (q_i - p_i)^2}
         ''')
-        st.write("""
-        > KNN termasuk algoritma supervised learning, dimana hasil dari query instance yang baru, diklasifikasikan berdasarkan mayoritas dari kategori pada KNN. Kelas yang paling banyak muncul yang akan menjadi kelas hasil klasifikasi
-        """)
         st.write("### Urutan Algoritma K-Nearest Neighbor")
         st.write("""
         1. Menentukan parameter K (jumlah tetangga paling dekat)
@@ -222,7 +219,7 @@ with modelling :
         """)
         st.write("### Formula")
         st.latex(r'''
-        P(C_k \<space>| \<space>x) = \frac{P(C_k) P(x|C_k}{P(x}
+        P(C_k | x) = \frac{P(C_k) P(x|C_k)}{P(x)}
         ''')
         # Inisialisasi Gaussian
         from sklearn.naive_bayes import GaussianNB
@@ -242,10 +239,17 @@ with modelling :
         st.write("""
         > Decision tree merupakan alat pendukung keputusan dengan struktur seperti pohon yang memodelkan kemungkinan hasil, biaya sumber daya, utilitas, dan kemungkinan konsekuensi. Konsepnya adalah dengan cara menyajikan algoritma dengan pernyataan bersyarat yang meliputi cabang untuk mewakili langkah-langkah pengambilan keputusan yang dapat mengarah pada hasil yang menguntungkan.
         """)
-        st.write("### Formula")
+        st.write("### Define Decision Tree Roots")
+        st.write(""""
+        > Akar akan diambil dari atribut yang terpilih, dengan cara menghitung nilai gain dari masing – masing atribut. Nilai gain yang paling tinggi akan menjadi akar pertama. Sebelum menghitung niali gain dari atribut, harus menghitung nilai entropy terlebih dahulu
+        """)
+        st.write("### Formula Entropy")
         st.latex(r'''
-        d(p,q) = d(p,q) = \sqrt{(q_1 - p_1)^2 + (q_2 - p_2)^2 + . . . + (q_n - p_n)^2}
-                        = \sqrt{\displaystyle\sum_{i=1}^n (q_1 - p_1)^2}
+        Entropy\left(\LARGE{D_1}\right) = - \displaystyle\sum_{i=1}^m p_i log_2 p_i
+        ''')
+        st.write("### Formula Gain")
+        st.latex(r'''
+        Gain(E_new) = E_initial - E_new
         ''')
         # Inisialisasi Decision Tree
         from sklearn.tree import DecisionTreeClassifier
@@ -268,8 +272,7 @@ with modelling :
         """)
         st.write("### Formula")
         st.latex(r'''
-        d(p,q) = d(p,q) = \sqrt{(q_1 - p_1)^2 + (q_2 - p_2)^2 + . . . + (q_n - p_n)^2}
-                        = \sqrt{\displaystyle\sum_{i=1}^n (q_1 - p_1)^2}
+        Entropy\left(\LARGE{D_1}\right) = - \displaystyle\sum_{i=1}^m p_i log_2 p_i
         ''')
         # Inisialisasi Random Forest
         from sklearn.ensemble import RandomForestClassifier
