@@ -249,7 +249,7 @@ with modelling :
         ''')
         st.write("### Formula Gain (D1)")
         st.latex(r'''
-        Gain(E_new) = E_i_n_i_t_i_a_l - E_n_e_w
+        Gain(E_{new}) = E_{initial} - E_{new}
         ''')
         # Inisialisasi Decision Tree
         from sklearn.tree import DecisionTreeClassifier
