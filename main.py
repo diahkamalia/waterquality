@@ -23,6 +23,7 @@ import urllib.request
 import time
 import os,sys
 from scipy import stats
+from streamlit_option_menu import option_menu
 st.set_page_config(page_title="Diah Kamalia", page_icon='logoooo.png')
 
 with st.container():
