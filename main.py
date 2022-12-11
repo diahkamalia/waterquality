@@ -36,8 +36,8 @@ with st.container():
 
     if choose == "Home":
         
-        st.markdown('<h1 style = "text-align: center;"> Water Quality </h1>', unsafe_allow_html = True)
-        st.markdown('<h1 style = "text-align: center;"> ------------------- </h1>', unsafe_allow_html = True)
+        st.markdown('<h1 style = "text-align: center;"> <b>Water Quality</b> </h1>', unsafe_allow_html = True)
+        st.markdown('')
 
         st.markdown('<div style ="text-align: justify;"> <b>Water Quality </b> adalah suatu ukuran kondisi air dilihat dari karakteristik fisik, kimiawi, dan biologisnya.[1] Kualitas air juga menunjukkan ukuran kondisi air relatif terhadap kebutuhan biota air dan manusia.[2] Kualitas air sering kali menjadi ukuran standar terhadap kondisi kesehatan ekosistem air dan kesehatan manusia terhadap air minum. Berbagai lembaga negara di dunia bersandar kepada data ilmiah dan keputusan politik dalam menentukan standar kualitas air yang diizinkan untuk keperluan tertentu.[3] Kondisi air bervariasi seiring waktu tergantung pada kondisi lingkungan setempat. Air terikat erat dengan kondisi ekologi setempat sehingga kualitas air termasuk suatu subjek yang sangat kompleks dalam ilmu lingkungan. Aktivitas industri seperti manufaktur, pertambangan, konstruksi, dan transportasi merupakan penyebab utama pencemaran air, juga limpasan permukaan dari pertanian dan perkotaan. </div>', unsafe_allow_html = True)
 
